@@ -1,0 +1,291 @@
+:root {
+    --card-height: 100vh;
+    --card-margin: 0;
+    --card-top-offset: 0;
+    --numcards: 5;
+    --container-width: 80vw;
+    --container-border-radius: 2em;
+}
+
+#cards {
+    margin-bottom: var(--card-margin);
+    width: var(--container-width);
+    margin: 0 auto;
+    border-radius: var(--container-border-radius);
+}
+
+#card_1 { --index: 1; }
+#card_2 { --index: 2; }
+#card_3 { --index: 3; }
+#card_4 { --index: 4; }
+#card_5 { --index: 5; }
+
+.card {
+    position: sticky;
+    top: 0;
+    padding-top: calc(var(--index) * var(--card-top-offset));
+    height: 80vh;
+    background: rgb(255, 255, 255);
+    color: rgb(10, 5, 7);
+    border-radius: 1em;
+    overflow: hidden;
+    box-shadow: 0 0.2em 1em rgba(0, 0, 0, 0.1), 0 1em 2em rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.2), 0 1.5em 3em rgba(0, 0, 0, 0.2);
+}
+
+.card__content {
+    display: grid;
+    grid-template-areas: "img text";
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    height: 100%;
+    padding: 2em;
+}
+
+.card__content > div {
+    grid-area: text;
+    text-align: left;
+    font-family: sans-serif;
+    font-weight: 300;
+    line-height: 1.42;
+}
+
+.card__content > figure {
+    grid-area: img;
+    overflow: hidden;
+    height: 100%;
+    padding-top: 60px;
+}
+
+.card__content > figure > img {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+}
+
+h2 {
+    font-weight: 300;
+    font-size: 2.5em;
+    font-family: 'Audrey', sans-serif;
+}
+
+p {
+    font-family: sans-serif;
+    font-weight: 300;
+    line-height: 1.42;
+}
+
+.small-cards {
+    display: flex;
+    font-size: 18px;
+    justify-content: space-around;
+    margin-top: 1em;
+}
+
+.small-card {
+    background: rgb(188, 87, 36);
+    color: rgb(255, 255, 255);
+    padding: 1em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    text-align: center;
+    width: 30%;
+    box-shadow: 0 0.2em 1em rgba(0, 0, 0, 0.1), 0 1em 2em rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.small-card:hover {
+    background-color: rgb(150, 70, 30);
+    color: rgb(76, 75, 75);
+    transform: translateY(-5px);
+}
+
+.small-card h3 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+/** Popup Styles integrated into card styles **/
+
+.custom-modal {
+    background: rgb(255, 255, 255);
+    color: rgb(10, 5, 7);
+    border-radius: 1em;
+    padding: 2em;
+    width: 60%;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.2), 0 1.5em 3em rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/** PAGE STYLING **/
+
+body {
+    background: rgb(58 29 43);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-size: calc(1em + 0.5vw);
+}
+
+main {
+    width: 100vw;
+    margin: 0 auto;
+}
+
+#cards {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(var(--numcards), var(--card-height));
+    gap: var(--card-margin);
+}
+
+@supports (animation-timeline: works) {
+
+    @scroll-timeline cards-element-scrolls-in-body {
+        source: selector(body);
+        scroll-offsets:
+            selector(#cards) start 1,
+            selector(#cards) start 0;
+        start: selector(#cards) start 1;
+        end: selector(#cards) start 0;
+        time-range: 5s;
+    }
+
+    .card {
+        --index0: calc(var(--index) - 1);
+        --reverse-index: calc(var(--numcards) - var(--index0));
+        --reverse-index0: calc(var(--reverse-index) - 1);
+    }
+    
+    .card__content {
+        transform-origin: 50% 0%;
+        will-change: transform;
+
+        --duration: calc(var(--reverse-index0) * 1s);
+        --delay: calc(var(--index0) * 1s);
+
+        animation: var(--duration) linear scale var(--delay) forwards;
+        animation-timeline: cards-element-scrolls-in-body;
+    }
+
+    @keyframes scale {
+        to {
+            transform:
+                scale(calc(
+                    1.1
+                    -
+                    calc(0.1 * var(--reverse-index))
+                ));
+        }
+    }
+}
+/*   
+  .custom-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  } */
+  .language-buttons-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px; /* Optional: Adds some space between buttons */
+  }
+  
+  .language-button {
+    font-family: 'Copperplate', 'Copperplate Gothic Light', fantasy;
+    font-size: 0.7em;
+    margin: 7px;
+    padding: 10px;
+    background-color: #2a88e6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .language-button:hover {
+    background-color: #1b5ca8;
+
+  }
+  .highlight-container {
+    text-align: left; /* Aligns the text and list items to the left */
+    margin: 0; /* Removes default margins */
+    padding: 0; /* Removes default padding */
+  }
+  
+  .highlight-container p, 
+  .highlight-container ul {
+    margin: 0; /* Removes default margins from the paragraph and list */
+    padding: 0; /* Removes default padding from the paragraph and list */
+  }
+  
+  .highlight-container ul {
+    list-style-type: disc; /* Ensures list items are shown with bullets */
+    padding-left: 20px; /* Adds padding to the left of the list */
+  }
+  .custom-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: white; */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    width: 500%;
+    max-height: 90%;
+    overflow-y: auto;
+  }
+  
+  .custom-overlay {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .close-button {
+        background: rgb(188, 87, 36);
+        color: rgb(255, 255, 255);
+        border: none;
+        padding: 0.2em 0.5em;
+        border-radius: 0.2em;
+        cursor: pointer;
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    
+  }
+  
+  .close-button:hover {
+    background-color: rgb(150, 70, 30);
+    transform: scale(1.05);
+  }
